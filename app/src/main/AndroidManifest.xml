@@ -8,12 +8,17 @@
 
     <application
         android:allowBackup="true"
+        android:name=".BaseApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FetchDownloadRx">
-        <activity android:name=".SingleDownloadActivity"></activity>
+        android:theme="@style/Theme.FetchDownloadRx"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".DownloadRx.DownloadRx"></activity>
+        <activity android:name=".SingleDownloadActivity" />
+        <activity android:name=".DownloadList.DownloadListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

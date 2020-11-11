@@ -46,6 +46,26 @@ class SingleDownloadActivity : AppCompatActivity(), FetchObserver<Download> {
         checkStoragePermission()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (this::request.isInitialized){
+            fetch.attachFetchObserversForDownload(request.id, this)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (this::request.isInitialized) {
+            fetch.removeFetchObserversForDownload(request.id, this)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fetch.close()
+    }
+
+
     private fun checkStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
@@ -58,7 +78,7 @@ class SingleDownloadActivity : AppCompatActivity(), FetchObserver<Download> {
     }
 
     private fun enqueueDownload() {
-        val url: String = Data.sampleUrls[0]
+        val url: String = Data.sampleUrls[5]
         val filePath: String = Data.getSaveDir().toString() + "/movies/" + Data.getNameFromUrl(url)
         Log.e(TAG, "enqueueDownload: $filePath")
         request = Request(url, filePath)
@@ -123,12 +143,13 @@ class SingleDownloadActivity : AppCompatActivity(), FetchObserver<Download> {
                 }
 
             Status.COMPLETED ->
-                if (progress == -1)
+                if (progress == -1) {
                     tvProgress.text = resources.getString(R.string.downloading)
-                else {
+                } else {
                     val progressString = resources.getString(R.string.percent_progress, progress);
                     tvProgress.text = progressString
                 }
+
             else -> tvProgress.text = resources.getString(R.string.status_unknown)
 
         }
